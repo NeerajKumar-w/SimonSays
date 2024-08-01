@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .content {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            background-color: grey;
+        }
+
+        .gridbox {
+            height: 600px;
+            width: 600px;
+            display: grid;
+            grid-template-rows: auto auto;
+            grid-template-columns: auto auto;
+            justify-items: center;
+            align-items: center;
+            background-color: white;
+            border: none;
+            border-radius: 50px;
+        }
+
+        .btn {
+            height: 70%;
+            width: 70%;
+            border-radius: 50px;
+            border: none;
+        }
+
+        button {
+            height: 50px;
+            width: 60px;
+            border-radius: 10px;
+            border: none;
+            background-color: maroon;
+            color: white;
+        }
+
+        #red {
+            background-color: red;
+        }
+
+        #blue {
+            background-color: blue;
+        }
+
+        #yellow {
+            background-color: yellow;
+        }
+
+        #green {
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="content">
+        <div id="level"></div>
+        <div class="gridbox">
+            <div class="btn" id="red" onclick="clickcol('red')"></div>
+            <div class="btn" id="blue" onclick="clickcol('blue')"></div>
+            <div class="btn" id="yellow" onclick="clickcol('yellow')"></div>
+            <div class="btn" id="green" onclick="clickcol('green')"></div>
+        </div>
+        <div>
+            <button type="button" onclick="start()">Start</button>
+            <button type="button" onclick="reset()">Reset</button>
+        </div>
+    </section>
+    <script>
+        const colors = ['red', 'blue', 'yellow', 'green'];
+        let level = 0;
+        let userorder = [];
+        let saidorder = [];
+        let game = false;
+        let input = false;
+        function reset() {
+            alert("Failed");
+            document.getElementById("level").innerHTML = "Click Start";
+            console.log('failed');
+            game = false;
+            input = false;
+            saidorder = [];
+            userorder = [];
+            level = 0;
+        }
+        function check() {
+            for (let i = 0; i < userorder.length; i++) {
+                if (userorder[i] != saidorder[i]) {
+                    reset()
+                }
+                else if (userorder.length == saidorder.length && userorder[i] == saidorder[i]) {
+                    level++;
+                    setTimeout(play(), 1000);
+                    clearTimeout();
+                }
+            }
+        }
+        function play() {
+            input = false;
+            userorder = [];
+            document.getElementById("level").innerHTML = "Level : " + level;
+            update();
+            input = true;
+        }
+        function blink() {
+            let box = saidorder[saidorder.length - 1];
+            setTimeout(() => {
+                document.getElementById(box).style.backgroundColor = "lightblue";
+            }, 500)
+            clearTimeout();
+            setTimeout(() => {
+                document.getElementById(box).style.backgroundColor = box;
+            }, 1000);
+            clearTimeout();
+        }
+        function update() {
+            saidorder.push(colors[Math.floor(Math.random() * 3) + 1]);
+            blink();
+            console.log(saidorder);
+        }
+        function start() {
+            level = 1;
+            document.getElementById("level").innerHTML = "Level : " + level;
+            update();
+            input = true;
+            game = true;
+        }
+        function clickblink(colorindex) {
+            let clickedbox = document.getElementById(colorindex);
+            setTimeout(() => {
+                clickedbox.style.backgroundColor = "black";
+            }, 10);
+            clearTimeout();
+            setTimeout(() => {
+                clickedbox.style.backgroundColor = colorindex;
+            }, 50);
+            clearTimeout();
+        }
+        function clickcol(color) {
+            if (input == true && game == true) {
+                console.log(color);
+                if (userorder.length < saidorder.length) {
+                    userorder.push(color);
+                    clickblink(color);
+                    check();
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
